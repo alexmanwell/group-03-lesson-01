@@ -18,7 +18,7 @@ const videos = [
 ];
 
 app.get('/', function (req: Request, res: Response) {
-    res.send("I want become backend developer. Hello world!");
+    res.send("I want become backend developer. Hello world! He-he");
 });
 
 app.get('/videos', (req: Request, res: Response) => {
