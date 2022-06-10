@@ -42,6 +42,7 @@ app.post('/videos', (req: Request, res: Response) => {
         author: 'it-incubator.eu'
     };
     videos.push(newVideo);
+    res.sendStatus(201);
     res.send(newVideo);
 });
 
