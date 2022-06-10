@@ -57,6 +57,18 @@ app.delete('/videos/:id', (req: Request, res: Response) => {
     }
 });
 
+app.put('/videos/:id', (req: Request, res: Response) => {
+    const id = +req.params.id;
+    const video = videos.find(v => v.id === id);
+
+    if (!video) {
+        res.sendStatus(404);
+    } else {
+        video.title = req.body.title;
+        res.sendStatus(204);
+    }
+});
+
 app.listen(port, () => {
     console.log(`Listening port ${port}`);
 });
