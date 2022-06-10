@@ -1,7 +1,13 @@
 import express, {Request, Response} from "express";
+import cors from "cors";
+import bodyParser from "body-parser";
 
 const app = express();
-const port = 8008;
+
+app.use(cors());
+app.use(bodyParser.json());
+
+const port = 8888;
 
 const videos = [
     {id: 1, title: 'About JS - 01', author: 'it-incubator.eu'},
@@ -11,27 +17,55 @@ const videos = [
     {id: 5, title: 'About JS - 05', author: 'it-incubator.eu'},
 ];
 
-app.get('/', function (req : Request, res : Response) {
+app.get('/', function (req: Request, res: Response) {
     res.send("I want become backend developer. Hello world!");
 });
 
 
-app.get('/lesson_01/api/videos', function (req : Request, res : Response) {
-    res.send(videos);
+app.post('/videos', (req: Request, res: Response) => {
+    const newVideo = {
+        id: videos.length + 1,
+        title: req.body.title,
+        author: 'it-incubator.eu'
+    };
+    videos.push(newVideo);
+    res.send(newVideo);
 });
 
-app.get('/lesson_01/api/videos/:videosId', function (req : Request, res : Response) {
-    const id : number = parseInt(req.params.videosId);
-    const foundVideo = videos.find((v) => v.id === id);
-    if (!foundVideo) {
-        res.status(400).json("No such video");
+app.get('/videos/:videoId', (req: Request, res: Response) => {
+    const id = +req.params.videoId;
+    const video = videos.find(v => v.id === id);
+    if (!video) {
+        res.sendStatus(404);
+    } else {
+        res.json(video)
     }
+});
 
-    if (foundVideo) {
-        res.json(`Video name is ${foundVideo.title}, and its author is ${foundVideo.author}`);
+app.delete('/videos/:id', (req: Request, res: Response) => {
+    const id = +req.params.id;
+    const index = videos.findIndex(v => v.id === id);
+
+    if (index != -1) {
+        videos.splice(index, 1);
+        res.sendStatus(204);
+    } else {
+        res.sendStatus(404);
+    }
+});
+
+app.put('/videos/:id', (req: Request, res: Response) => {
+    const id = +req.params.id;
+    const video = videos.find(v => v.id === id);
+
+    if (!video) {
+        res.sendStatus(404);
+    } else {
+        video.title = req.body.title;
+        res.sendStatus(204);
     }
 });
 
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`);
+    console.log(`Listening port ${port}`);
 });
