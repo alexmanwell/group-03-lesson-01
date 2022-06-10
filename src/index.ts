@@ -17,11 +17,11 @@ const videos = [
     {id: 5, title: 'About JS - 05', author: 'it-incubator.eu'},
 ];
 
-app.get('/', function (req : Request, res : Response) {
+app.get('/', function (req: Request, res: Response) {
     res.send('I want become backend developer. Hello world!!!!');
 });
 
-app.get('/videos', function (req : Request, res : Response) {
+app.get('/videos', function (req: Request, res: Response) {
     res.send(videos)
 });
 
@@ -43,6 +43,18 @@ app.post('/videos', (req: Request, res: Response) => {
     };
     videos.push(newVideo);
     res.send(newVideo);
+});
+
+app.delete('/videos/:id', (req: Request, res: Response) => {
+    const id = +req.params.id;
+    const index = videos.findIndex(v => v.id === id);
+
+    if (index != -1) {
+        videos.splice(index, 1);
+        res.sendStatus(204);
+    } else {
+        res.sendStatus(404);
+    }
 });
 
 app.listen(port, () => {
