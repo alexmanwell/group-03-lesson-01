@@ -1,6 +1,11 @@
 import express, {Request, Response} from "express";
+import cors from "cors";
+import bodyParser from "body-parser";
 
 const app = express();
+
+app.use(cors());
+app.use(bodyParser.json());
 
 const port = 8888;
 
@@ -28,6 +33,16 @@ app.get('/videos/:videoId', (req: Request, res: Response) => {
     } else {
         res.json(video)
     }
+});
+
+app.post('/videos', (req: Request, res: Response) => {
+    const newVideo = {
+        id: videos.length + 1,
+        title: req.body.title,
+        author: 'it-incubator.eu'
+    };
+    videos.push(newVideo);
+    res.send(newVideo);
 });
 
 app.listen(port, () => {
