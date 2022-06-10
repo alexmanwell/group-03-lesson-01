@@ -21,15 +21,8 @@ app.get('/', function (req: Request, res: Response) {
     res.send("I want become backend developer. Hello world!");
 });
 
-
-app.post('/videos', (req: Request, res: Response) => {
-    const newVideo = {
-        id: videos.length + 1,
-        title: req.body.title,
-        author: 'it-incubator.eu'
-    };
-    videos.push(newVideo);
-    res.send(newVideo);
+app.get('/videos', (req: Request, res: Response) => {
+    res.json(videos)
 });
 
 app.get('/videos/:videoId', (req: Request, res: Response) => {
@@ -41,6 +34,17 @@ app.get('/videos/:videoId', (req: Request, res: Response) => {
         res.json(video)
     }
 });
+
+app.post('/videos', (req: Request, res: Response) => {
+    const newVideo = {
+        id: videos[videos.length - 1].id + 1,
+        title: req.body.title,
+        author: 'it-incubator.eu'
+    };
+    videos.push(newVideo);
+    res.send(newVideo);
+});
+
 
 app.delete('/videos/:id', (req: Request, res: Response) => {
     const id = +req.params.id;
