@@ -7,7 +7,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-const port = 8888;
+const port = process.env.PORT || 8888;
 
 const videos = [
     {id: 1, title: 'About JS - 01', author: 'it-incubator.eu'},
