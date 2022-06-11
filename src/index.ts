@@ -36,14 +36,45 @@ app.get('/videos/:videoId', (req: Request, res: Response) => {
 });
 
 app.post('/videos', (req: Request, res: Response) => {
-    const newVideo = {
+    const title: String = req.body.title;
+    if (!title) {
+        res.status(400).send({
+                'errorsMessages': [{
+                    message: 'Title is required',
+                    field: 'title'
+                }]
+            }
+        );
+        return;
+    }
+    if (title.length > 40) {
+        res.status(400).send({
+                errorsMessages: [{
+                    message: "Title has incorrect length value",
+                    field: "title"
+                }]
+            }
+        );
+        return;
+    }
+    if (typeof title !== "string") {
+        res.status(400).send({
+                errorsMessages: [{
+                    message: "Title has incorrect value",
+                    field: "title"
+                }]
+            }
+        );
+        return;
+    }
+
+    const video = {
         id: videos[videos.length - 1].id + 1,
-        title: req.body.title,
+        title: title,
         author: 'it-incubator.eu'
     };
-    videos.push(newVideo);
-    res.sendStatus(201);
-    res.send(newVideo);
+    videos.push(video);
+    res.sendStatus(201).send(video);
 });
 
 
