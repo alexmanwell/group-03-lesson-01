@@ -91,9 +91,20 @@ app.delete('/videos/:id', (req: Request, res: Response) => {
 });
 
 app.put('/videos/:id', (req: Request, res: Response) => {
+    const title = req.body.title;
+    if(!title || title.length > 40 || typeof title !== "string") {
+        res.status(400).send({
+                errorsMessages: [{
+                    message: "Title has incorrect",
+                    field: "title"
+                }]
+            }
+        );
+        return;
+    }
+
     const id = +req.params.id;
     const video = videos.find(v => v.id === id);
-
     if (!video) {
         res.sendStatus(404);
     } else {
