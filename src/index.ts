@@ -125,12 +125,12 @@ const bloggers: Array<User> = [
     new User(5, "baklajan", "https:\/\/www.youtube.com\/c\/UlbiTV"),
 ];
 
-app.get(`/bloggers`, (req: Request, res: Response) => {
+app.get(`/hs_01/api/bloggers`, (req: Request, res: Response) => {
     res.status(200);
     res.send(bloggers)
 });
 
-app.get(`/bloggers/:id`, (req: Request, res: Response) => {
+app.get(`/hs_01/api/bloggers/:id`, (req: Request, res: Response) => {
     const id = Number(req.params.id);
     const blogger = bloggers.find(blogger => blogger.id === id);
 
