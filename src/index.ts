@@ -2,6 +2,7 @@ import express, {Request, Response} from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import {bloggerRoute} from "./route/BloggerRoute";
+import {User} from "./model/User";
 
 const app = express();
 
@@ -10,7 +11,7 @@ app.use(bodyParser.json());
 
 const port = process.env.PORT || 8888;
 
-app.use("/bloggers", bloggerRoute);
+//app.use("/bloggers", bloggerRoute);
 
 const videos = [
     {id: 1, title: 'About JS - 01', author: 'it-incubator.eu'},
@@ -113,6 +114,31 @@ app.put('/videos/:id', (req: Request, res: Response) => {
     } else {
         video.title = req.body.title;
         res.sendStatus(204);
+    }
+});
+
+const bloggers: Array<User> = [
+    new User(1, "alex", "https:\/\/www.youtube.com\/c\/RollingScopesSchool"),
+    new User(2, "dimas", "https:\/\/www.youtube.com\/c\/ITINCUBATOR"),
+    new User(3, "pivas", "https:\/\/www.youtube.com\/channel\/UCTW0FUhT0m-Bqg2trTbSs0g"),
+    new User(4, "sinivan", "https:\/\/www.youtube.com\/c\/ArchakovBlog"),
+    new User(5, "baklajan", "https:\/\/www.youtube.com\/c\/UlbiTV"),
+];
+
+app.get(`/bloggers`, (req: Request, res: Response) => {
+    res.status(200);
+    res.send(bloggers)
+});
+
+app.get(`/bloggers/:id`, (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+    const blogger = bloggers.find(blogger => blogger.id === id);
+
+    if (!blogger) {
+        res.status(404);
+        res.send("Not bound");
+    } else {
+        res.send(blogger);
     }
 });
 
