@@ -1,6 +1,7 @@
 import express, {Request, Response} from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
+import {bloggerRoute} from "./route/BloggerRoute";
 
 const app = express();
 
@@ -8,6 +9,8 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const port = process.env.PORT || 8888;
+
+app.use("/", bloggerRoute);
 
 const videos = [
     {id: 1, title: 'About JS - 01', author: 'it-incubator.eu'},
