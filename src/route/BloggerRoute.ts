@@ -16,6 +16,6 @@ bloggerRoute.get("/:id", (req: Request, res: Response) => {
         res.sendStatus(404);
     } else {
         res.status(200);
-        res.json(bloggers)
+        res.send(bloggers)
     }
 });
