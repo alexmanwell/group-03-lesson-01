@@ -13,7 +13,8 @@ export class BloggerInMemoryImpl implements BloggerDAO {
     ];
 
     create(user: User): User {
-        this.users.push(user);
+        const id : number = +new Date();
+        this.users.push(new User(id, user.name, user.youtubeUrl));
         return user;
     }
 
