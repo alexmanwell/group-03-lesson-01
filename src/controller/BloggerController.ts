@@ -1,13 +1,17 @@
-import {Request, Response, Router} from "express";
+import {Request, Response} from "express";
 import {BloggerDAO} from "../repository/BloggerDAO";
 import {BloggerInMemoryImpl} from "../repository/BloggerInMemoryImpl";
+import {User} from "../model/User";
 
-export const router = Router();
+export class BloggerController {
 
-router.get('/', (req: Request, res: Response) => {
+    findAll(req: Request, res: Response) : ReadonlyArray<User> {
 
-});
+        return new Array;
+    }
 
-router.get('/:id', (req: Request, res: Response) => {
+    findById(id : number) {
 
-});
+        return;
+    }
+}

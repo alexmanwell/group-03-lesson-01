@@ -6,16 +6,21 @@ export const bloggerRoute = Router({});
 const bloggerDAO : BloggerDAO = new BloggerInMemoryImpl();
 
 bloggerRoute.get("/", (req: Request, res: Response) => {
-    res.json(bloggerDAO.findAll());
+    res.status(200);
+    res.send(bloggerDAO.findAll());
 });
 
 bloggerRoute.get("/:id", (req: Request, res: Response) => {
     const id = +req.params.id;
-    const bloggers = bloggerDAO.findById(id);
-    if (!bloggers) {
+    const blogger = bloggerDAO.findById(id);
+    if (!blogger) {
         res.sendStatus(404);
     } else {
         res.status(200);
-        res.send(bloggers)
+        res.send(blogger);
     }
+});
+
+bloggerRoute.post("/", (req: Request, res: Response) => {
+    
 });
