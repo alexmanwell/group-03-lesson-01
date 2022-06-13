@@ -1,3 +1,4 @@
+/*
 import {PostDAO} from "./PostDAO";
 import {Post} from "../model/Post";
 
@@ -21,4 +22,4 @@ export class PostInMemoryImpl implements PostDAO {
         return undefined;
     }
 
-}
+}*/
