@@ -1,23 +1,23 @@
 export class User {
-    private readonly _id: number;
-    private readonly _name: string;
-    private readonly _youtubeUrl: string;
+    private readonly id: number;
+    private readonly name: string;
+    private readonly youtubeUrl: string;
 
     constructor(id: number, name: string, youtubeUrl: string) {
-        this._id = id;
-        this._name = name;
-        this._youtubeUrl = youtubeUrl;
+        this.id = id;
+        this.name = name;
+        this.youtubeUrl = youtubeUrl;
     };
 
-    get id(): number {
-        return this._id;
+    get getId(): number {
+        return this.id;
     }
 
-    get name(): string {
-        return this._name;
+    get getName(): string {
+        return this.name;
     }
 
-    get youtubeUrl(): string {
-        return this._youtubeUrl;
+    get getYoutubeUrl(): string {
+        return this.youtubeUrl;
     }
 }
