@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 
 const port = process.env.PORT || 8888;
 
-app.use("/", bloggerRoute);
+app.use("/api/bloggers", bloggerRoute);
 
 const videos = [
     {id: 1, title: 'About JS - 01', author: 'it-incubator.eu'},
