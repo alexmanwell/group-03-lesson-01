@@ -18,14 +18,15 @@ videosRoute.get('/:videoId', (req: Request, res: Response) => {
     const id = +req.params.videoId;
     const video = videos.find(v => v.id === id);
     if (!video) {
-        res.sendStatus(404);
+        res.status(404);
     } else {
         res.json(video)
     }
 });
 
 videosRoute.post('/', (req: Request, res: Response) => {
-    const title: String = req.body.title;
+    const title: string = req.body.title;
+    console.log(title);
     if (!title) {
         res.status(400).send({
                 'errorsMessages': [{
@@ -72,9 +73,9 @@ videosRoute.delete('/:id', (req: Request, res: Response) => {
 
     if (index != -1) {
         videos.splice(index, 1);
-        res.sendStatus(204);
+        res.status(204);
     } else {
-        res.sendStatus(404);
+        res.status(404);
     }
 });
 
@@ -94,9 +95,9 @@ videosRoute.put('/:id', (req: Request, res: Response) => {
     const id = +req.params.id;
     const video = videos.find(v => v.id === id);
     if (!video) {
-        res.sendStatus(404);
+        res.status(404);
     } else {
         video.title = req.body.title;
-        res.sendStatus(204);
+        res.status(204);
     }
 });

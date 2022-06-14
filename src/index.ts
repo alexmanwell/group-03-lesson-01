@@ -1,8 +1,9 @@
-import express, {Request, Response} from "express";
+import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import {bloggerRoute} from "./route/BloggerRoute";
-import {videosRoute} from "./route/VideosRoute"
+import {videosRoute} from "./route/VideosRoute";
+
 const app = express();
 
 app.use(cors());

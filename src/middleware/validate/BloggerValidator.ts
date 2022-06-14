@@ -1,8 +1,7 @@
 import {body, validationResult} from "express-validator"
-import {NextFunction} from "express";
+import {Request, Response, NextFunction} from "express";
 
-const validateName = body('name')
-    .exists().withMessage("Name field must be exist.")
+const validateName = body("name")
     .isString().withMessage("Name field must be string.")
     .trim()
     .notEmpty().withMessage("Name must be not empty.")
@@ -10,17 +9,18 @@ const validateName = body('name')
     .withMessage("Name must be a string with range length from 1 to 15 symbols.");
 
 const validateYoutubeUrl =
-    body('youtubeUrl')
+    body("youtubeUrl")
         .exists()
         .withMessage("YoutubeUrl field must be exist.")
         .matches("^https:\\/\\/([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$")
-        .withMessage("YoutubeUrl must be match the regular expression")
+        .withMessage("YoutubeUrl must be match regular expression")
         .isLength({
             min: 1,
             max: 100
         }).withMessage("YoutubeUrl must be a string with range length from 1 to 100 symbols.");
 
 const errorsValidation = (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.body);
     const valResult = validationResult.withDefaults({
             formatter: error => {
                 return {
@@ -33,10 +33,12 @@ const errorsValidation = (req: Request, res: Response, next: NextFunction) => {
 
     const errors = valResult(req);
     if (!errors.isEmpty()) {
-        res.status(400).send({errorsMessages: errors.array({onlyFirstError: true}), resultCode: 1});
-        return
+        res.status(400)
+            .send({errorsMessages: errors.array({onlyFirstError: true}), resultCode: 1});
+        return;
     }
 
     next();
 };
 
+export const validateBlogger = [validateName, validateYoutubeUrl, errorsValidation];

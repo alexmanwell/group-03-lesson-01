@@ -1,7 +1,6 @@
 import {BloggerDAO} from "./BloggerDAO";
 import {User} from "../model/User";
 
-
 export class BloggerInMemoryImpl implements BloggerDAO {
 
     private users: Array<User> = [
