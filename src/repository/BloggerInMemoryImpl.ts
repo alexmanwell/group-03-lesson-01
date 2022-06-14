@@ -19,7 +19,7 @@ export class BloggerInMemoryImpl implements BloggerDAO {
 
     create(user: User): User | null{
         console.log("user:", user);
-        const id : number = this.incrementIndex();
+        const id : number = (user.id !== - 1) ? user.id : this.incrementIndex();
         const newUser: User = new User(id, user.name, user.youtubeUrl);
         console.log("newUser:", newUser);
         this.users.push(newUser);
