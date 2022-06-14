@@ -14,8 +14,9 @@ const postDAO: PostDAO = new PostInMemoryImpl();
 export const postRoute = Router({});
 
 const toPostDTO = (post: Post) => {
-    let bloggerId: number = (!post.blogger) ? -1 : post.blogger.id;
-    return new PostDTO(post.id, post.title, post.shortDescription, post.content, bloggerId)
+    const bloggerId: number = (!post.blogger) ? -1 : post.blogger.id;
+    const bloggerName: string = (!post.blogger) ? "" : post.blogger.name;
+    return new PostDTO(post.id, post.title, post.shortDescription, post.content, bloggerId, bloggerName);
 };
 
 const toPostsDTO = (posts: ReadonlyArray<Post>) => {

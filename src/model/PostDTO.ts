@@ -4,6 +4,7 @@ export class PostDTO {
                 readonly title: string,
                 readonly shortDescription: string,
                 readonly content: string,
-                readonly bloggerId: number) {
+                readonly bloggerId: number,
+                readonly bloggerName: string) {
     }
 }
