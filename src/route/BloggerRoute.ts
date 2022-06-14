@@ -19,11 +19,11 @@ bloggerRoute.get("/:id", (req: Request, res: Response) => {
     if (!blogger) {
         res.sendStatus(404);
         return;
-    } else {
-        res.status(200);
-        res.send(blogger);
-        return;
     }
+
+    res.status(200).send(blogger);
+    return;
+
 });
 
 bloggerRoute.post("/", validateBlogger, (req: Request, res: Response) => {
@@ -34,11 +34,10 @@ bloggerRoute.post("/", validateBlogger, (req: Request, res: Response) => {
     if (!blogger) {
         res.sendStatus(404);
         return;
-    } else {
-        res.status(201);
-        res.send(blogger);
-        return;
     }
+
+    res.status(201).send(blogger);
+    return;
 });
 
 bloggerRoute.put("/:id", validateBlogger, (req: Request, res: Response) => {

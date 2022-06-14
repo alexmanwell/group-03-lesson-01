@@ -41,9 +41,9 @@ export class BloggerInMemoryImpl implements BloggerDAO {
         return this.users;
     }
 
-    findById(id: number): User | undefined {
+    findById(id: number): User | null {
         const user = this.users.find(user => user.id === id);
-        return (!user) ? undefined : user;
+        return (!user) ? null : user;
     }
 
     update(user: User): User {

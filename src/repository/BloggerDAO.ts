@@ -2,7 +2,7 @@ import {User} from "../model/User";
 
 export interface BloggerDAO {
 
-    findById(id: number): User | undefined;
+    findById(id: number): User | null;
 
     findAll(): ReadonlyArray<User>;
 
