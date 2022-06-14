@@ -1,5 +1,5 @@
-import {body, validationResult} from "express-validator"
-import {Request, Response, NextFunction} from "express";
+import {body} from "express-validator"
+import {errorValidation} from "./ErrorValidation";
 
 const validateName = body("name")
     .isString().withMessage("Name field must be string.")
@@ -18,26 +18,7 @@ const validateYoutubeUrl = body("youtubeUrl")
         max: 100
     }).withMessage("YoutubeUrl must be a string with range length from 1 to 100 symbols.");
 
-const errorsValidation = (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.body);
-    const valResult = validationResult.withDefaults({
-            formatter: error => {
-                return {
-                    message: error.msg,
-                    field: error.param
-                }
-            }
-        }
-    );
-
-    const errors = valResult(req);
-    if (!errors.isEmpty()) {
-        res.status(400)
-            .send({errorsMessages: errors.array({onlyFirstError: true}), resultCode: 1});
-        return;
-    }
-
-    next();
-};
-
-export const validateBlogger = [validateName, validateYoutubeUrl, errorsValidation];
+export const validateBlogger = [
+    validateName,
+    validateYoutubeUrl,
+    errorValidation];
