@@ -10,5 +10,5 @@ export interface BloggerDAO {
 
     update(user: User): User;
 
-    delete(id: number): void;
+    delete(id: number): boolean;
 }

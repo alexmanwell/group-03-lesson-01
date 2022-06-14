@@ -20,15 +20,16 @@ bloggerRoute.get("/:id", (req: Request, res: Response) => {
         res.sendStatus(404);
         return;
     } else {
-        res.sendStatus(200);
+        res.status(200);
         res.send(blogger);
         return;
     }
 });
 
 bloggerRoute.post("/", validateBlogger, (req: Request, res: Response) => {
-    console.log("Test");
+    console.log("Test", req.body.name, req.body.youtubeUrl);
     const blogger = bloggerDAO.create(new User(req.body.name, req.body.youtubeUrl));
+    console.log("After creating", blogger);
 
     if (!blogger) {
         res.sendStatus(404);
@@ -46,20 +47,21 @@ bloggerRoute.put("/:id", validateBlogger, (req: Request, res: Response) => {
     if (!blogger) {
         res.sendStatus(404);
         return;
-    } else {
-        res.sendStatus(204);
-        return;
     }
+
+    res.status(204);
+    res.send(blogger);
+    return;
 });
 
 bloggerRoute.delete('/:id', (req: Request, res: Response) => {
-    const id = +req.params.id;
-    const blogger = bloggerDAO.delete(id);
-    if (!bloggerDAO) {
+    const isRemove = bloggerDAO.delete(+req.params.id);
+    console.log("isRemove:", isRemove);
+    if (isRemove === false) {
         res.sendStatus(404);
         return;
-    } else {
-        res.sendStatus(204);
-        return;
     }
+
+    res.sendStatus(204);
+    return;
 });

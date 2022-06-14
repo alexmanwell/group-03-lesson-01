@@ -11,18 +11,30 @@ export class BloggerInMemoryImpl implements BloggerDAO {
         new User(5, "baklajan", "https:\/\/www.youtube.com\/c\/UlbiTV"),
     ];
 
+    private lastIndex = this.users.length;
+
+    private incrementIndex() {
+        return ++this.lastIndex;
+    }
+
     create(user: User): User {
-        const id : number = +Date.now();
+        console.log("user:", user);
+        const id : number = this.incrementIndex();
         const newUser = new User(id, user.name, user.youtubeUrl);
+        console.log("newUser:", newUser);
         this.users.push(newUser);
         return newUser;
     }
 
-    delete(id: number): void {
+    delete(id: number): boolean {
         const index = this.users.findIndex(user => user.id === id);
         if (index != -1) {
             this.users.splice(index, 1);
+            return true;
         }
+
+        console.log("bad removing");
+        return false;
     }
 
     findAll(): ReadonlyArray<User> {
