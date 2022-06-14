@@ -6,9 +6,9 @@ export interface BloggerDAO {
 
     findAll(): ReadonlyArray<User>;
 
-    create(user: User): User;
+    create(user: User): User | null;
 
-    update(user: User): User;
+    update(user: User): User | null;
 
     delete(id: number): boolean;
 }

@@ -17,17 +17,17 @@ export class BloggerInMemoryImpl implements BloggerDAO {
         return ++this.lastIndex;
     }
 
-    create(user: User): User {
+    create(user: User): User | null{
         console.log("user:", user);
         const id : number = this.incrementIndex();
         const newUser: User = new User(id, user.name, user.youtubeUrl);
         console.log("newUser:", newUser);
         this.users.push(newUser);
-        return newUser;
+        return this.findById(newUser.id);
     }
 
     delete(id: number): boolean {
-        const index = this.users.findIndex(user => user.id === id);
+        const index : number = this.users.findIndex(user => user.id === id);
         if (index != -1) {
             this.users.splice(index, 1);
             return true;
@@ -43,11 +43,11 @@ export class BloggerInMemoryImpl implements BloggerDAO {
 
     findById(id: number): User | null {
         const user = this.users.find(user => user.id === id);
-        return (!user) ? null : user;
+        return (user) ? user : null;
     }
 
-    update(user: User): User {
-        const index = this.users.findIndex(u => u.id === user.id);
-        return this.users[index] = user;
+    update(user: User): User | null{
+        const index : number = this.users.findIndex(u => u.id === user.id);
+        return (index !== - 1) ? this.users[index] = user : null;
     }
 }
