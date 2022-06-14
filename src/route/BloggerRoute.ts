@@ -28,7 +28,7 @@ bloggerRoute.get("/:id", (req: Request, res: Response) => {
 
 bloggerRoute.post("/", validateBlogger, (req: Request, res: Response) => {
     console.log("Test", req.body.name, req.body.youtubeUrl);
-    const blogger = bloggerDAO.create(new User(req.body.name, req.body.youtubeUrl));
+    const blogger = bloggerDAO.create(new User(-1, req.body.name, req.body.youtubeUrl));
     console.log("After creating", blogger);
 
     if (!blogger) {
