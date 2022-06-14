@@ -48,7 +48,7 @@ bloggerRoute.put("/:id", bloggerValidator.validate, (req: Request, res: Response
 
 bloggerRoute.delete('/:id', (req: Request, res: Response) => {
     const id = +req.params.id;
-    const deletedBlogger = bloggerDAO.delete(id);
+    const blogger = bloggerDAO.delete(id);
     if (!bloggerDAO) {
         res.send(404);
         return
