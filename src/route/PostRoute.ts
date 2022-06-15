@@ -25,19 +25,18 @@ const toPostsDTO = (posts: ReadonlyArray<Post>) => {
     });
 };
 
-const invalidExistBloggerMessage = {
-    "errorsMessages": [
-        {
-            "message": "Invalid 'bloggerId': blogger doesn't exist",
-            "field": "bloggerId"
-        }
-    ]
+const invalidExistBloggerMessage = (bloggerId: number) => {
+    return `{
+    "errorsMessages": [{
+        "message": "Invalid 'blogger by id = ${bloggerId}': blogger doesn't exist",
+        "field": "bloggerId"
+        }]
+    }`
 };
 
 postRoute.get("/", (req: Request, res: Response) => {
     const posts = postDAO.findAll();
-    res.status(200);
-    res.send(toPostsDTO(posts));
+    res.status(200).send(toPostsDTO(posts));
 });
 
 postRoute.get("/:id", (req: Request, res: Response) => {
@@ -53,13 +52,11 @@ postRoute.get("/:id", (req: Request, res: Response) => {
 });
 
 postRoute.post("/", postValidator, (req: Request, res: Response) => {
-    let blogger: User | null = bloggerDAO.findById(req.body.bloggerId);
+    const bloggerId = req.body.bloggerId;
+    const blogger: User | null = bloggerDAO.findById(bloggerId);
     if (!blogger) {
-        blogger = bloggerDAO.create(new User(-1, `name ${req.body.bloggerId}`, `https://youtube.com/${req.body.bloggerId}`))
-/*
-        res.status(400).send(invalidExistBloggerMessage);
+        res.status(400).send(invalidExistBloggerMessage(bloggerId));
         return;
-*/
     }
 
     const title: string = req.body.title;
@@ -87,15 +84,16 @@ postRoute.put("/:id", postValidator, (req: Request, res: Response) => {
     const bloggerId: number = +req.body.bloggerId;
     const blogger: User | null = bloggerDAO.findById(bloggerId);
 
-        if (!Object.is(post.blogger, blogger)) {
-            res.status(400).send(invalidExistBloggerMessage);
-            return;
-        }
+    if (!blogger) {
+        res.status(400).send(invalidExistBloggerMessage(bloggerId));
+        return;
+    }
 
     const title: string = req.body.title;
     const shortDescription: string = req.body.shortDescription;
     const content: string = req.body.content;
-    post = postDAO.update(new Post(id, title, shortDescription, content, new User(bloggerId, req.body.bloggerName)));
+    const bloggerName = req.body.bloggerName;
+    post = postDAO.update(new Post(id, title, shortDescription, content, new User(bloggerId, bloggerName)));
 
     res.status(204).send(toPostDTO(post));
     return;
