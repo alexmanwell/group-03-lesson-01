@@ -72,12 +72,14 @@ postRoute.put("/:id", postValidator, (req: Request, res: Response) => {
         res.status(404).send(`Not found post by id = ${id}`);
         return;
     }
-
+    
     const bloggerId: number = +req.body.bloggerId;
     let blogger: User | null = bloggerDAO.findById(bloggerId);
-    if (!blogger) {
-        blogger = bloggerDAO.create(new User(bloggerId, `name ${bloggerId}`, `https://youtube.com/${bloggerId}`));
+    if (!Object.is(post.blogger, blogger)) {
+        res.status(400).send(`Not found post by id = ${id}`);
+        return;
     }
+
     const title: string = req.body.title;
     const shortDescription: string = req.body.shortDescription;
     const content: string = req.body.content;
