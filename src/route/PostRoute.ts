@@ -48,10 +48,8 @@ postRoute.post("/", validatePost, (req: Request, res: Response) => {
     const shortDescription: string = req.body.shortDescription;
     const content: string = req.body.content;
     const bloggerId: number = req.body.bloggerId;
-    console.log("Test", title, shortDescription, content, bloggerId);
-    let blogger: User | null = bloggerDAO.findById(bloggerId);
-    console.log("blogger:", blogger);
 
+    let blogger: User | null = bloggerDAO.findById(bloggerId);
     if (!blogger) {
         blogger = bloggerDAO.create(new User(bloggerId, `name ${bloggerId}`, `https://youtube.com/${bloggerId}`));
     }
