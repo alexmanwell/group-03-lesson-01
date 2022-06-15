@@ -51,7 +51,8 @@ postRoute.post("/", postValidator, (req: Request, res: Response) => {
 
     let blogger: User | null = bloggerDAO.findById(bloggerId);
     if (!blogger) {
-        res.status(400).send({message: `Not Found blogger by id = ${bloggerId}`, field: bloggerId})
+        res.status(400).send({message: `Not Found blogger by id = ${bloggerId}`, field: bloggerId});
+        return;
 //        blogger = bloggerDAO.create(new User(bloggerId, `name ${bloggerId}`, `https://youtube.com/${bloggerId}`));
     }
     const post: Post | null = postDAO.create(new Post(-1, title, shortDescription, content, blogger));
@@ -70,7 +71,8 @@ postRoute.put("/:id", postValidator, (req: Request, res: Response) => {
     const bloggerId: number = +req.body.bloggerId;
     let blogger: User | null = bloggerDAO.findById(bloggerId);
     if (!blogger) {
-        res.status(400).send({message: `Not Found blogger by id = ${bloggerId}`, field: bloggerId})
+        res.status(400).send({message: `Not Found blogger by id = ${bloggerId}`, field: bloggerId});
+        return;
 //        blogger = bloggerDAO.create(new User(bloggerId, `name ${bloggerId}`, `https://youtube.com/${bloggerId}`));
     }
     const title: string = req.body.title;
