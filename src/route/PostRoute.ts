@@ -55,8 +55,11 @@ postRoute.get("/:id", (req: Request, res: Response) => {
 postRoute.post("/", postValidator, (req: Request, res: Response) => {
     let blogger: User | null = bloggerDAO.findById(req.body.bloggerId);
     if (!blogger) {
+        blogger = bloggerDAO.create(new User(-1, `name ${req.body.bloggerId}`, `https://youtube.com/${req.body.bloggerId}`))
+/*
         res.status(400).send(invalidExistBloggerMessage);
         return;
+*/
     }
 
     const title: string = req.body.title;
