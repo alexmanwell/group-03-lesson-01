@@ -45,17 +45,16 @@ postRoute.get("/:id", (req: Request, res: Response) => {
 
 postRoute.post("/", postValidator, (req: Request, res: Response) => {
     const bloggerId: number = req.body.bloggerId;
-    const blogger: User | null = bloggerDAO.findById(bloggerId);
+
+    let blogger: User | null = bloggerDAO.findById(bloggerId);
     if (!blogger) {
-        res.status(400).send({ message: `Not found post by id = ${bloggerId}`, field: bloggerId });
-        return;
+        blogger = bloggerDAO.create(new User(bloggerId, `name ${bloggerId}`, `https://youtube.com/${bloggerId}`));
     }
 
     const title: string = req.body.title;
     const shortDescription: string = req.body.shortDescription;
     const content: string = req.body.content;
     const post: Post | null = postDAO.create(new Post(-1, title, shortDescription, content, blogger));
-
     if (!post) {
         res.sendStatus(404);
         return;
