@@ -1,5 +1,8 @@
-import {body} from "express-validator"
+import {body, CustomValidator} from "express-validator"
 import {errorValidation} from "./ErrorValidation";
+import {User} from "../../model/User";
+import {BloggerDAO} from "../../repository/BloggerDAO";
+import {BloggerInMemoryImpl} from "../../repository/BloggerInMemoryImpl";
 
 const validateTitle = body("title")
     .isString().withMessage("Title field must be string.")
@@ -16,9 +19,20 @@ const validateContent = body("content")
     .trim().notEmpty().withMessage("Content must be not empty")
     .isLength({max: 100}).withMessage("Content must be max length 100 symbols.");
 
+
+const isExistBlogger : CustomValidator = (bloggerId) => {
+    const bloggerDAO : BloggerDAO = new BloggerInMemoryImpl();
+    let blogger: User | null = bloggerDAO.findById(bloggerId);
+    if (!blogger) {
+        return Promise.reject(`Not found post by id = ${bloggerId}`);
+    }
+
+};
+
 const validateBloggerId = body('bloggerId')
      .exists().withMessage("BloggerId is required")
-     .isNumeric().withMessage("BloggerId should be number");
+     .isNumeric().withMessage("BloggerId should be number")
+    .custom(isExistBlogger);
 
 export const postValidator = [
     validateTitle,
