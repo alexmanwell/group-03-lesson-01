@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import {bloggerRoute} from "./route/BloggerRoute";
+import {bloggersRouter} from "./route/bloggerRouteAnotherImpl";
 import {videosRoute} from "./route/VideosRoute";
 import {postRoute} from "./route/PostRouteAnotherImpl";
 
@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 const port = process.env.PORT || 8888;
 
 app.use("/videos", videosRoute);
-app.use("/bloggers", bloggerRoute);
+app.use("/bloggers", bloggersRouter);
 app.use("/posts", postRoute);
 
 app.listen(port, () => {
