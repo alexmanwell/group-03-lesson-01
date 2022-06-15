@@ -20,7 +20,6 @@ const validateContent = body("content")
     .isLength({max: 100}).withMessage("Content must be max length 100 symbols.");
 
 
-/*
 const isExistBlogger : CustomValidator = (bloggerId) => {
     const bloggerDAO : BloggerDAO = new BloggerInMemoryImpl();
     let blogger: User | null = bloggerDAO.findById(bloggerId);
@@ -28,14 +27,11 @@ const isExistBlogger : CustomValidator = (bloggerId) => {
         return Promise.reject(`Not found post by id = ${bloggerId}`);
     }
 };
-*/
 
-/*
 const validateBloggerId = body('bloggerId')
     .exists().withMessage("BloggerId is required")
     .isNumeric().withMessage("BloggerId should be number");
 
-*/
 
 export const postValidator = [
     validateTitle,

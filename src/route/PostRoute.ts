@@ -14,9 +14,9 @@ const postDAO: PostDAO = new PostInMemoryImpl();
 export const postRoute = Router({});
 
 const toPostDTO = (post: Post) => {
-    const bloggerId: number = (!post.blogger) ? -1 : post.blogger.id;
-    const bloggerName: string = (!post.blogger) ? "" : post.blogger.name;
-    return new PostDTO(post.id, post.title, post.shortDescription, post.content, bloggerId, bloggerName);
+    const bloggerId: number | undefined = (!post.blogger) ? -1 : post.blogger.id;
+    const bloggerName: string | undefined= (!post.blogger) ? undefined : post.blogger.name;
+    return new PostDTO(post.id, post.title, post.shortDescription, post.content, bloggerId, (!bloggerName) ? "" : bloggerName);
 };
 
 const toPostsDTO = (posts: ReadonlyArray<Post>) => {
@@ -28,7 +28,7 @@ const toPostsDTO = (posts: ReadonlyArray<Post>) => {
 const invalidExistBloggerMessage = {
     "errorsMessages": [
         {
-            "message": "Invalid 'bloggerId': such blogger doesn't exist",
+            "message": "Invalid 'bloggerId': blogger doesn't exist",
             "field": "bloggerId"
         }
     ]
@@ -53,11 +53,10 @@ postRoute.get("/:id", (req: Request, res: Response) => {
 });
 
 postRoute.post("/", postValidator, (req: Request, res: Response) => {
-    const bloggerId: number = req.body.bloggerId;
-
-    let blogger: User | null = bloggerDAO.findById(bloggerId);
+    let blogger: User | null = bloggerDAO.findById(req.body.bloggerId);
     if (!blogger) {
-        blogger = bloggerDAO.create(new User(bloggerId, `name ${bloggerId}`, `https://youtube.com/${bloggerId}`));
+        res.status(400).send(invalidExistBloggerMessage);
+        return;
     }
 
     const title: string = req.body.title;
