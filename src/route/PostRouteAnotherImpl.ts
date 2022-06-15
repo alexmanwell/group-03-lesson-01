@@ -34,36 +34,41 @@ postRoute.post('/', postValidator, (req: Request, res: Response) => {
         res.status(201).send(createdPost);
         return;
     }
-    res.send(404)
+
+    res.send(404);
 });
 
 postRoute.put('/:id', postValidator, (req: Request, res: Response) => {
-    const postId = +req.params.id;
-
-    if (!postRepository.findById(postId)) {
-        res.send(404);
-        return;
-    }
     if (!bloggerDAO.findById(req.body.bloggerId)) {
         res.status(400).send(invalidExistBloggerMessage);
         return;
     }
-    const isUpdetedPost = postRepository.update(req.body, postId);
-    if (isUpdetedPost) {
-        res.send(204);
+
+    const postId = +req.params.id;
+    if (!postRepository.findById(postId)) {
+        res.send(404);
         return;
     }
 
+    const isUpdatePost = postRepository.update(req.body, postId);
+    if (isUpdatePost) {
+        res.send(204);
+        return;
+    } else {
+        res.send(400);
+        return;
+    }
 });
 
 postRoute.get('/:id', (req: Request, res: Response) => {
     const id = +req.params.id;
-    const foundPost = postRepository.findById(id);
-    if (foundPost) {
-        res.status(200).send(foundPost);
+    const post = postRepository.findById(id);
+    if (post) {
+        res.status(200).send(post);
         return;
     }
-    res.send(404)
+
+    res.send(404);
 });
 
 postRoute.delete('/:id', (req: Request, res: Response) => {
@@ -73,6 +78,6 @@ postRoute.delete('/:id', (req: Request, res: Response) => {
         res.send(204);
         return;
     }
-    res.send(404)
 
+    res.send(404);
 });
