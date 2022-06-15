@@ -25,6 +25,15 @@ const toPostsDTO = (posts: ReadonlyArray<Post>) => {
     });
 };
 
+const invalidExistBloggerMessage = {
+    "errorsMessages": [
+        {
+            "message": "Invalid 'bloggerId': such blogger doesn't exist",
+            "field": "bloggerId"
+        }
+    ]
+};
+
 postRoute.get("/", (req: Request, res: Response) => {
     const posts = postDAO.findAll();
     res.status(200);
@@ -76,7 +85,7 @@ postRoute.put("/:id", postValidator, (req: Request, res: Response) => {
     const bloggerId: number = +req.body.bloggerId;
     const blogger: User | null = bloggerDAO.findById(bloggerId);
     if (!Object.is(post.blogger, blogger)) {
-        res.status(400).send({ message: `Not found post by id = ${bloggerId}`, field: bloggerId });
+        res.status(400).send(invalidExistBloggerMessage);
         return;
     }
 
