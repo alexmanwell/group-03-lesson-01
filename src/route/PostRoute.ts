@@ -4,7 +4,7 @@ import {BloggerInMemoryImpl} from "../repository/BloggerInMemoryImpl";
 import {PostInMemoryImpl} from "../repository/PostInMemoryImpl";
 import {Request, Response, Router} from "express";
 import {User} from "../model/User";
-import {validatePost} from "../middleware/validate/ValidatePost";
+import {postValidator} from "../middleware/validate/PostValidator";
 import {Post} from "../model/Post";
 import {PostDTO} from "../model/PostDTO";
 
@@ -43,7 +43,7 @@ postRoute.get("/:id", (req: Request, res: Response) => {
     return;
 });
 
-postRoute.post("/", validatePost, (req: Request, res: Response) => {
+postRoute.post("/", postValidator, (req: Request, res: Response) => {
     const title: string = req.body.title;
     const shortDescription: string = req.body.shortDescription;
     const content: string = req.body.content;
@@ -64,7 +64,7 @@ postRoute.post("/", validatePost, (req: Request, res: Response) => {
     return;
 });
 
-postRoute.put("/:id", validatePost, (req: Request, res: Response) => {
+postRoute.put("/:id", postValidator, (req: Request, res: Response) => {
     const id: number = +req.params.id;
     const bloggerId: number = +req.body.bloggerId;
     let blogger: User | null = bloggerDAO.findById(bloggerId);

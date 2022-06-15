@@ -17,10 +17,10 @@ const validateContent = body("content")
     .isLength({max: 100}).withMessage("Content must be max length 100 symbols.");
 
 const validateBloggerId = body('bloggerId')
-     .exists().withMessage('The field bloggerId is required')
-     .isNumeric().withMessage('The field bloggerId should be integer');
+     .exists().withMessage("BloggerId is required")
+     .isNumeric().withMessage("BloggerId should be number");
 
-export const validatePost = [
+export const postValidator = [
     validateTitle,
     validateShortDescription,
     validateContent,
