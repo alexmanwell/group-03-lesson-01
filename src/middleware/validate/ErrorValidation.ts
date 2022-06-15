@@ -16,7 +16,7 @@ export const errorValidation = (req: Request, res: Response, next: NextFunction)
     const errors = valResult(req);
     if (!errors.isEmpty()) {
         res.status(400)
-            .send({errorsMessages: errors.array({onlyFirstError: true}), resultCode: 1});
+            .send({errorsMessages: errors.array({onlyFirstError: true})});
         return;
     }
 
