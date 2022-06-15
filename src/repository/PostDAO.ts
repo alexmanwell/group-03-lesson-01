@@ -8,7 +8,7 @@ export interface PostDAO {
 
     create(post: Post): Post | null;
 
-    update(post: Post): Post | null;
+    update(post: Post): Post;
 
     delete(id: number): boolean;
 }

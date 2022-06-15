@@ -67,8 +67,8 @@ postRoute.post("/", postValidator, (req: Request, res: Response) => {
 postRoute.put("/:id", postValidator, (req: Request, res: Response) => {
     const id: number = +req.params.id;
 
-    const findPostById : Post | null = postDAO.findById(id);
-    if (!findPostById) {
+    let post : Post | null = postDAO.findById(id);
+    if (!post) {
         res.status(404).send(`Not found post by id = ${id}`);
         return;
     }
@@ -81,10 +81,9 @@ postRoute.put("/:id", postValidator, (req: Request, res: Response) => {
     const title: string = req.body.title;
     const shortDescription: string = req.body.shortDescription;
     const content: string = req.body.content;
-    const post: Post | null = postDAO.update(new Post(id, title, shortDescription, content, blogger));
+    post = postDAO.update(new Post(id, title, shortDescription, content, blogger));
 
-    res.status(204);
-    res.send(toPostDTO(post));
+    res.status(204).send(toPostDTO(post));
     return;
 });
 

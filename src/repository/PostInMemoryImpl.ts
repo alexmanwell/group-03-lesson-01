@@ -55,8 +55,8 @@ export class PostInMemoryImpl implements PostDAO {
         return (post) ? post : null;
     }
 
-    update(post: Post): Post | null {
+    update(post: Post): Post {
         const index: number = this.posts.findIndex(p => p.id === post.id);
-        return (index !== -1) ? this.posts[index] = post : null;
+        return this.posts[index] = post;
     }
 }
