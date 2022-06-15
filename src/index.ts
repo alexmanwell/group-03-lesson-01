@@ -3,7 +3,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import {bloggerRoute} from "./route/BloggerRoute";
 import {videosRoute} from "./route/VideosRoute";
-import {postRoute} from "./route/PostRoute";
+import {postRoute} from "./route/PostRouteAnotherImpl";
 
 const app = express();
 
