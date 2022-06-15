@@ -15,7 +15,7 @@ bloggerRoute.get("/", (req: Request, res: Response) => {
 
 bloggerRoute.get("/:id", (req: Request, res: Response) => {
     const id: number = +req.params.id;
-    const blogger = bloggerDAO.findById(id);
+    const blogger: User | null = bloggerDAO.findById(id);
     if (!blogger) {
         res.sendStatus(404);
         return;
@@ -27,10 +27,7 @@ bloggerRoute.get("/:id", (req: Request, res: Response) => {
 });
 
 bloggerRoute.post("/", validateBlogger, (req: Request, res: Response) => {
-    console.log("Test", req.body.name, req.body.youtubeUrl);
     const blogger = bloggerDAO.create(new User(-1, req.body.name, req.body.youtubeUrl));
-    console.log("After creating", blogger);
-
     if (!blogger) {
         res.sendStatus(404);
         return;
@@ -41,8 +38,8 @@ bloggerRoute.post("/", validateBlogger, (req: Request, res: Response) => {
 });
 
 bloggerRoute.put("/:id", validateBlogger, (req: Request, res: Response) => {
-    const id: number  = +req.params.id;
-    const blogger = bloggerDAO.update(new User(id, req.body.name, req.body.youtubeUrl));
+    const id: number = +req.params.id;
+    const blogger: User | null = bloggerDAO.update(new User(id, req.body.name, req.body.youtubeUrl));
     if (!blogger) {
         res.sendStatus(404);
         return;
@@ -54,9 +51,8 @@ bloggerRoute.put("/:id", validateBlogger, (req: Request, res: Response) => {
 });
 
 bloggerRoute.delete('/:id', (req: Request, res: Response) => {
-    const id: number  = +req.params.id;
-    const isRemove = bloggerDAO.delete(id);
-    console.log("isRemove:", isRemove);
+    const id: number = +req.params.id;
+    const isRemove: boolean = bloggerDAO.delete(id);
     if (isRemove === false) {
         res.sendStatus(404);
         return;
