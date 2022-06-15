@@ -66,6 +66,13 @@ postRoute.post("/", postValidator, (req: Request, res: Response) => {
 
 postRoute.put("/:id", postValidator, (req: Request, res: Response) => {
     const id: number = +req.params.id;
+
+    const findPostById : Post | null = postDAO.findById(id);
+    if (!findPostById) {
+        res.status(400).send(`Not found post by id = ${id}`);
+        return;
+    }
+
     const bloggerId: number = +req.body.bloggerId;
     let blogger: User | null = bloggerDAO.findById(bloggerId);
     if (!blogger) {
