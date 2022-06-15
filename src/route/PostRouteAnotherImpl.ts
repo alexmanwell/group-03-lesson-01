@@ -2,7 +2,6 @@ import {BloggerDAO} from "../repository/BloggerDAO";
 import {BloggerInMemoryImpl} from "../repository/BloggerInMemoryImpl";
 import {postRepository} from "../repository/PostInMemoryRepository";
 import {Request, Response, Router} from "express";
-import {User} from "../model/User";
 import {postValidator} from "../middleware/validate/PostValidator";
 
 const bloggerDAO: BloggerDAO = new BloggerInMemoryImpl();
@@ -18,6 +17,67 @@ const invalidExistBloggerMessage = {
     ]
 };
 
+postRoute.get('/', (req: Request, res: Response) => {
+    const posts = postRepository.findAll();
+    res.send(posts);
+});
+
+postRoute.post('/', postValidator, (req: Request, res: Response) => {
+    const existBlogger = bloggerDAO.findById(req.body.bloggerId);
+    if(!existBlogger){
+        res.status(400).send(invalidExistBloggerMessage);
+        return;
+    }
+    const createdPost = postRepository.create(req.body,existBlogger);
+
+    if (createdPost) {
+        res.status(201).send(createdPost);
+        return;
+    }
+    res.send(404)
+});
+
+postRoute.put('/:id', postValidator, (req: Request, res: Response) => {
+    const postId = +req.params.id;
+
+    if (!postRepository.findById(postId)) {
+        res.send(404);
+        return;
+    }
+    if (!bloggerDAO.findById(req.body.bloggerId)) {
+        res.status(400).send(invalidExistBloggerMessage);
+        return;
+    }
+    const isUpdetedPost = postRepository.update(req.body, postId);
+    if (isUpdetedPost) {
+        res.send(204);
+        return;
+    }
+
+});
+
+postRoute.get('/:id', (req: Request, res: Response) => {
+    const id = +req.params.id;
+    const foundPost = postRepository.findById(id);
+    if (foundPost) {
+        res.status(200).send(foundPost);
+        return;
+    }
+    res.send(404)
+});
+
+postRoute.delete('/:id', (req: Request, res: Response) => {
+    const id = +req.params.id;
+    const deletedPost = postRepository.delete(id);
+    if (deletedPost) {
+        res.send(204);
+        return;
+    }
+    res.send(404)
+
+});
+
+/*
 postRoute.get("/", (req: Request, res: Response) => {
     const posts = postRepository.findAll();
     res.status(200);
@@ -92,4 +152,4 @@ postRoute.delete('/:id', (req: Request, res: Response) => {
 
     res.sendStatus(204);
     return;
-});
+});*/
