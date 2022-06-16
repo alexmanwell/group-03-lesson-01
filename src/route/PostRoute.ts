@@ -26,11 +26,11 @@ const toPostsDTO = (posts: ReadonlyArray<Post>) => {
     });
 };
 
-const invalidExistMessage = (entityName: string, variableName: string, bloggerId: number) => {
+const invalidExistMessage = (bloggerId: number) => {
     return `{
     "errorsMessages": [{
-        "message": "Invalid '${entityName} by id = ${bloggerId}': ${entityName} doesn't exist",
-        "field": "${variableName}"
+        "message": "Invalid blogger by id = ${bloggerId}': blogger doesn't exist",
+        "field": "bloggerId"
         }]
     }`
 };
@@ -56,7 +56,7 @@ postRoute.post("/", postValidator, (req: Request, res: Response) => {
     const bloggerId: number = req.body.bloggerId;
     const blogger: User | null = bloggerDAO.findById(bloggerId);
     if (!blogger) {
-        res.status(400).send(invalidExistMessage("blogger","bloggerId", bloggerId));
+        res.status(400).send(invalidExistMessage(bloggerId));
         return;
     }
 
@@ -69,7 +69,7 @@ postRoute.post("/", postValidator, (req: Request, res: Response) => {
         return;
     }
 
-    res.status(201).send(post);
+    res.status(201).send(toPostDTO(post));
     return;
 });
 
@@ -78,7 +78,7 @@ postRoute.put("/:id", postValidator, (req: Request, res: Response) => {
 
     let post: Post | null = postDAO.findById(id);
     if (!post) {
-        res.status(404).send(invalidExistMessage("post","id", id));
+        res.status(404).send(invalidExistMessage(id));
         return;
     }
 
@@ -86,7 +86,7 @@ postRoute.put("/:id", postValidator, (req: Request, res: Response) => {
     const blogger: User | null = bloggerDAO.findById(bloggerId);
 
     if (!blogger) {
-        res.status(400).send(invalidExistMessage("blogger","bloggerName", bloggerId));
+        res.status(400).send(invalidExistMessage(bloggerId));
         return;
     }
 
@@ -96,7 +96,7 @@ postRoute.put("/:id", postValidator, (req: Request, res: Response) => {
 
     postDAO.update(new Post(id, title, shortDescription, content, blogger));
 
-    res.status(204).send(post);
+    res.status(204).send(toPostDTO(post));
     return;
 });
 
