@@ -3,8 +3,9 @@ import {BloggerInMemoryImpl} from "../repository/BloggerInMemoryImpl";
 import {Request, Response, Router} from "express";
 import {validateBlogger} from "../middleware/validate/BloggerValidator";
 import {User} from "../model/User";
+import {users} from "../resources/DataBaseInMemory";
 
-const bloggerDAO: BloggerDAO = new BloggerInMemoryImpl();
+const bloggerDAO: BloggerDAO = new BloggerInMemoryImpl(users);
 
 export const bloggerRoute = Router({});
 

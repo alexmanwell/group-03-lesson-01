@@ -3,6 +3,7 @@ import {errorValidation} from "./ErrorValidation";
 import {User} from "../../model/User";
 import {BloggerDAO} from "../../repository/BloggerDAO";
 import {BloggerInMemoryImpl} from "../../repository/BloggerInMemoryImpl";
+import {users} from "../../resources/DataBaseInMemory";
 
 const validateTitle = body("title")
     .isString().withMessage("Title field must be string.")
@@ -21,7 +22,7 @@ const validateContent = body("content")
 
 
 const isExistBlogger : CustomValidator = (bloggerId) => {
-    const bloggerDAO : BloggerDAO = new BloggerInMemoryImpl();
+    const bloggerDAO : BloggerDAO = new BloggerInMemoryImpl(users);
     let blogger: User | null = bloggerDAO.findById(bloggerId);
     if (!blogger) {
         return Promise.reject(`Not found post by id = ${bloggerId}`);

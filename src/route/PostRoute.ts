@@ -7,16 +7,17 @@ import {User} from "../model/User";
 import {postValidator} from "../middleware/validate/PostValidator";
 import {Post} from "../model/Post";
 import {PostDTO} from "../model/PostDTO";
+import {posts, users} from "../resources/DataBaseInMemory";
 
-const bloggerDAO: BloggerDAO = new BloggerInMemoryImpl();
-const postDAO: PostDAO = new PostInMemoryImpl();
+const bloggerDAO: BloggerDAO = new BloggerInMemoryImpl(users);
+const postDAO: PostDAO = new PostInMemoryImpl(posts);
 
 export const postRoute = Router({});
 
 const toPostDTO = (post: Post) => {
     const bloggerId: number | undefined = (!post.blogger) ? -1 : post.blogger.id;
     const bloggerName: string | undefined = (!post.blogger) ? undefined : post.blogger.name;
-    return new PostDTO(post.id, post.title, post.shortDescription, post.content, bloggerId, (!bloggerName) ? "" : bloggerName);
+    return new PostDTO(post.id, post.title, post.shortDescription, post.content, bloggerId, (!bloggerName) ? `name ${bloggerId}` : bloggerName);
 };
 
 const toPostsDTO = (posts: ReadonlyArray<Post>) => {
@@ -68,7 +69,7 @@ postRoute.post("/", postValidator, (req: Request, res: Response) => {
         return;
     }
 
-    res.status(201).send(toPostDTO(post));
+    res.sendStatus(201);
     return;
 });
 
@@ -92,10 +93,10 @@ postRoute.put("/:id", postValidator, (req: Request, res: Response) => {
     const title: string = req.body.title;
     const shortDescription: string = req.body.shortDescription;
     const content: string = req.body.content;
-    const bloggerName = req.body.bloggerName;
-    post = postDAO.update(new Post(id, title, shortDescription, content, new User(bloggerId, bloggerName)));
 
-    res.status(204).send(toPostDTO(post));
+    postDAO.update(new Post(id, title, shortDescription, content, blogger));
+
+    res.sendStatus(204);
     return;
 });
 
