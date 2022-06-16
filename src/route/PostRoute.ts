@@ -26,11 +26,11 @@ const toPostsDTO = (posts: ReadonlyArray<Post>) => {
     });
 };
 
-const invalidExistBloggerMessage = (bloggerId: number) => {
+const invalidExistMessage = (entityName: string, variableName: string, bloggerId: number) => {
     return `{
     "errorsMessages": [{
-        "message": "Invalid 'blogger by id = ${bloggerId}': blogger doesn't exist",
-        "field": "bloggerId"
+        "message": "Invalid '${entityName} by id = ${bloggerId}': ${entityName} doesn't exist",
+        "field": "${variableName}"
         }]
     }`
 };
@@ -53,10 +53,10 @@ postRoute.get("/:id", (req: Request, res: Response) => {
 });
 
 postRoute.post("/", postValidator, (req: Request, res: Response) => {
-    const bloggerId = req.body.bloggerId;
+    const bloggerId: number = req.body.bloggerId;
     const blogger: User | null = bloggerDAO.findById(bloggerId);
     if (!blogger) {
-        res.status(400).send(invalidExistBloggerMessage(bloggerId));
+        res.status(400).send(invalidExistMessage("blogger","bloggerId", bloggerId));
         return;
     }
 
@@ -69,7 +69,7 @@ postRoute.post("/", postValidator, (req: Request, res: Response) => {
         return;
     }
 
-    res.sendStatus(201);
+    res.status(201).send(post);
     return;
 });
 
@@ -78,7 +78,7 @@ postRoute.put("/:id", postValidator, (req: Request, res: Response) => {
 
     let post: Post | null = postDAO.findById(id);
     if (!post) {
-        res.status(404).send(`Not found post by id = ${id}`);
+        res.status(404).send(invalidExistMessage("post","id", id));
         return;
     }
 
@@ -86,7 +86,7 @@ postRoute.put("/:id", postValidator, (req: Request, res: Response) => {
     const blogger: User | null = bloggerDAO.findById(bloggerId);
 
     if (!blogger) {
-        res.status(400).send(invalidExistBloggerMessage(bloggerId));
+        res.status(400).send(invalidExistMessage("blogger","bloggerName", bloggerId));
         return;
     }
 
@@ -96,7 +96,7 @@ postRoute.put("/:id", postValidator, (req: Request, res: Response) => {
 
     postDAO.update(new Post(id, title, shortDescription, content, blogger));
 
-    res.sendStatus(204);
+    res.status(204).send(post);
     return;
 });
 
