@@ -94,7 +94,7 @@ postRoute.put("/:id", postValidator, (req: Request, res: Response) => {
     const shortDescription: string = req.body.shortDescription;
     const content: string = req.body.content;
 
-    postDAO.update(new Post(id, title, shortDescription, content, blogger));
+    post = postDAO.update(new Post(id, title, shortDescription, content, blogger));
 
     res.status(204).send(toPostDTO(post));
     return;
