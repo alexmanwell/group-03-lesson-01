@@ -1,11 +1,15 @@
 import {PostDAO} from "./PostDAO";
 import {Post} from "../model/Post";
+import {PostType, users} from "../resources/DataBaseInMemory";
+import {BloggerDAO} from "./BloggerDAO";
+import {BloggerInMemoryImpl} from "./BloggerInMemoryImpl";
+import {User} from "../model/User";
 
 export class PostInMemoryImpl implements PostDAO {
 
-    private readonly posts: Array<Post>;
-
-    constructor(posts : Array<Post>) {
+    private readonly posts: Array<PostType>;
+    private readonly  bloggers : BloggerDAO = new BloggerInMemoryImpl(users);
+    constructor(posts: Array<PostType>) {
         this.posts = posts;
     }
 
@@ -13,15 +17,21 @@ export class PostInMemoryImpl implements PostDAO {
 
     private incrementIndex = () => this.lastIndex() + 1;
 
-    public create(post: Post): Post | null {
-        const id: number = this.incrementIndex();
-        const newPost: Post = new Post(id, post.title, post.shortDescription, post.content, post.blogger);
-        this.posts.push(newPost);
-        return this.findById(id);
+    public create(post: PostType): Post | null {
+        const postId: number = this.incrementIndex();
+        this.posts.push({
+            id: postId,
+            title: post.title,
+            shortDescription: post.shortDescription,
+            content: post.content,
+            bloggerId: post.bloggerId
+        });
+
+        return this.findById(postId);
     }
 
     public delete(id: number): boolean {
-        const index : number = this.posts.findIndex(post => post.id === id);
+        const index: number = this.posts.findIndex(post => post.id === id);
         if (index != -1) {
             this.posts.splice(index, 1);
             return true;
@@ -31,7 +41,10 @@ export class PostInMemoryImpl implements PostDAO {
     }
 
     public findAll(): ReadonlyArray<Post> {
-        return this.posts;
+        return this.posts.map((p) => {
+            let post = this.findById(p.id);
+            return (!post) ? new Post(p.id, p.title, p.shortDescription, p.content, new User(p.bloggerId)) : post;
+        });
     }
 
     public findById(id: number): Post | null {
@@ -40,11 +53,18 @@ export class PostInMemoryImpl implements PostDAO {
             return null;
         }
 
-        return post;
+        const blogger = this.bloggers.findById(post.bloggerId);
+        if (!blogger) {
+            return null;
+        }
+
+        return new Post(post.id, post.title, post.shortDescription, post.content, new User(blogger.id, blogger.name));
     }
 
-    public update(post: Post): Post {
+    public update(post: PostType): Post | null{
         const index: number = this.posts.findIndex(p => p.id === post.id);
-        return this.posts[index] = post;
+        this.posts[index] = post;
+
+        return this.findById(post.id);
     }
 }

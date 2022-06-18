@@ -1,4 +1,5 @@
 import {Post} from "../model/Post";
+import {PostType} from "../resources/DataBaseInMemory";
 
 export interface PostDAO {
 
@@ -6,9 +7,9 @@ export interface PostDAO {
 
     findAll(): ReadonlyArray<Post>;
 
-    create(post: Post): Post | null;
+    create(post: PostType): Post | null;
 
-    update(post: Post): Post;
+    update(post: PostType): Post | null;
 
     delete(id: number): boolean;
 }

@@ -6,25 +6,12 @@ import {Request, Response, Router} from "express";
 import {User} from "../model/User";
 import {postValidator} from "../middleware/validate/PostValidator";
 import {Post} from "../model/Post";
-import {PostDTO} from "../model/PostDTO";
 import {posts, users} from "../resources/DataBaseInMemory";
 
 const bloggerDAO: BloggerDAO = new BloggerInMemoryImpl(users);
 const postDAO: PostDAO = new PostInMemoryImpl(posts);
 
 export const postRoute = Router({});
-
-const toPostDTO = (post: Post) => {
-    const bloggerId: number | undefined = (!post.blogger) ? -1 : post.blogger.id;
-    const bloggerName: string | undefined = (!post.blogger) ? undefined : post.blogger.name;
-    return new PostDTO(post.id, post.title, post.shortDescription, post.content, bloggerId, (!bloggerName) ? `name ${bloggerId}` : bloggerName);
-};
-
-const toPostsDTO = (posts: ReadonlyArray<Post>) => {
-    return posts.map((post: Post) => {
-        return toPostDTO(post);
-    });
-};
 
 const invalidExistMessage = (bloggerId: number) => {
     return `{
@@ -37,7 +24,7 @@ const invalidExistMessage = (bloggerId: number) => {
 
 postRoute.get("/", (req: Request, res: Response) => {
     const posts = postDAO.findAll();
-    res.status(200).send(toPostsDTO(posts));
+    res.status(200).send(posts);
 });
 
 postRoute.get("/:id", (req: Request, res: Response) => {
@@ -48,7 +35,7 @@ postRoute.get("/:id", (req: Request, res: Response) => {
         return;
     }
 
-    res.status(200).send(toPostDTO(post));
+    res.status(200).send(post);
     return;
 });
 
@@ -63,13 +50,19 @@ postRoute.post("/", postValidator, (req: Request, res: Response) => {
     const title: string = req.body.title;
     const shortDescription: string = req.body.shortDescription;
     const content: string = req.body.content;
-    const post: Post | null = postDAO.create(new Post(-1, title, shortDescription, content, blogger));
+    const post: Post | null = postDAO.create({
+        id: -1,
+        title: title,
+        shortDescription: shortDescription,
+        content: content,
+        bloggerId: blogger.id
+    });
     if (!post) {
         res.sendStatus(404);
         return;
     }
 
-    res.status(201).send(toPostDTO(post));
+    res.status(201).send(post);
     return;
 });
 
@@ -90,13 +83,15 @@ postRoute.put("/:id", postValidator, (req: Request, res: Response) => {
         return;
     }
 
-    const title: string = req.body.title;
-    const shortDescription: string = req.body.shortDescription;
-    const content: string = req.body.content;
+    post = postDAO.update({
+        id: -1,
+        title: req.body.title,
+        shortDescription: req.body.shortDescription,
+        content: req.body.content,
+        bloggerId: blogger.id
+    });
 
-    post = postDAO.update(new Post(id, title, shortDescription, content, blogger));
-
-    res.status(204).send(toPostDTO(post));
+    res.status(204).send(post);
     return;
 });
 

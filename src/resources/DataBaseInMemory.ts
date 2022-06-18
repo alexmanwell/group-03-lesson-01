@@ -1,13 +1,10 @@
-import {User} from "../model/User";
-import {Post} from "../model/Post";
-
-type UserType = {
+export type UserType = {
     id: number,
     name: string,
     youtubeUrl: string
 };
 
-type PostType = {
+export type PostType = {
     id: number,
     title: string,
     shortDescription: string,
