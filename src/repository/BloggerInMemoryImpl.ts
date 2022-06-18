@@ -9,13 +9,9 @@ export class BloggerInMemoryImpl implements BloggerDAO {
         this.users = users;
     }
 
-    private lastIndex() : number {
-        return this.users.length
-    }
+    private lastIndex = () => this.users[this.users.length - 1].id;
 
-    private incrementIndex() : number {
-        return this.lastIndex() + 1;
-    }
+    private incrementIndex = () => this.lastIndex() + 1;
 
     public create(user: User): User | null{
         const id : number = (user.id !== - 1) ? user.id : this.incrementIndex();

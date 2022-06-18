@@ -9,7 +9,7 @@ export class PostInMemoryImpl implements PostDAO {
         this.posts = posts;
     }
 
-    private lastIndex = () => this.posts.length;
+    private lastIndex = () => this.posts[this.posts.length - 1].id;
 
     private incrementIndex = () => this.lastIndex() + 1;
 
