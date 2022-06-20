@@ -7,9 +7,11 @@ import {User} from "../model/User";
 import {postValidator} from "../middleware/validate/PostValidator";
 import {Post} from "../model/Post";
 import {posts, users} from "../resources/DataBaseInMemory";
+import {Authorization} from "../middleware/authorization/Authorization";
 
 const bloggerDAO: BloggerDAO = new BloggerInMemoryImpl(users);
 const postDAO: PostDAO = new PostInMemoryImpl(posts);
+const authorization: Authorization = new Authorization();
 
 export const postRoute = Router({});
 
@@ -39,7 +41,7 @@ postRoute.get("/:id", (req: Request, res: Response) => {
     return;
 });
 
-postRoute.post("/", postValidator, (req: Request, res: Response) => {
+postRoute.post("/", authorization.check, postValidator, (req: Request, res: Response) => {
     const bloggerId: number = req.body.bloggerId;
     const blogger: User | null = bloggerDAO.findById(bloggerId);
     if (!blogger) {
@@ -66,7 +68,7 @@ postRoute.post("/", postValidator, (req: Request, res: Response) => {
     return;
 });
 
-postRoute.put("/:id", postValidator, (req: Request, res: Response) => {
+postRoute.put("/:id", authorization.check, postValidator, (req: Request, res: Response) => {
     const id: number = +req.params.id;
 
     let post: Post | null = postDAO.findById(id);
@@ -95,7 +97,7 @@ postRoute.put("/:id", postValidator, (req: Request, res: Response) => {
     return;
 });
 
-postRoute.delete('/:id', (req: Request, res: Response) => {
+postRoute.delete('/:id', authorization.check, (req: Request, res: Response) => {
     const id: number = +req.params.id;
     const isRemovePost: boolean = postDAO.delete(id);
     if (!isRemovePost) {
