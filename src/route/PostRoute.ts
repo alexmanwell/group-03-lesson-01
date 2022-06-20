@@ -115,7 +115,7 @@ postRoute.put("/:id", authorization.check, postValidator, (req: Request, res: Re
     }
 
     const p = postDAO.update({
-        id: -1,
+        id: id,
         title: req.body.title,
         shortDescription: req.body.shortDescription,
         content: req.body.content,
