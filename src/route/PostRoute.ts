@@ -8,6 +8,7 @@ import {postValidator} from "../middleware/validate/PostValidator";
 import {Post} from "../model/Post";
 import {posts, users} from "../resources/DataBaseInMemory";
 import {Authorization} from "../middleware/authorization/Authorization";
+import {PostDTO} from "../dto/PostDTO";
 
 const bloggerDAO: BloggerDAO = new BloggerInMemoryImpl(users);
 const postDAO: PostDAO = new PostInMemoryImpl(posts);
@@ -26,7 +27,19 @@ const invalidExistMessage = (bloggerId: number) => {
 
 postRoute.get("/", (req: Request, res: Response) => {
     const posts = postDAO.findAll();
-    res.status(200).send(posts);
+    res.status(200)
+        .send(posts.map(p => {
+                return new PostDTO(
+                    p.id,
+                    p.title,
+                    p.shortDescription,
+                    p.content,
+                    (p.blogger) ? p.blogger.id : -1,
+                    (p.blogger) ? p.blogger.name : undefined
+                );
+            }
+        ));
+
 });
 
 postRoute.get("/:id", (req: Request, res: Response) => {
@@ -37,7 +50,15 @@ postRoute.get("/:id", (req: Request, res: Response) => {
         return;
     }
 
-    res.status(200).send(post);
+    res.status(200)
+        .send(new PostDTO(
+            post.id,
+            post.title,
+            post.shortDescription,
+            post.content,
+            (post.blogger) ? post.blogger.id : -1,
+            (post.blogger) ? post.blogger.name : undefined)
+        );
     return;
 });
 
@@ -64,7 +85,15 @@ postRoute.post("/", authorization.check, postValidator, (req: Request, res: Resp
         return;
     }
 
-    res.status(201).send(post);
+    res.status(201)
+        .send(new PostDTO(
+            post.id,
+            post.title,
+            post.shortDescription,
+            post.content,
+            (post.blogger) ? post.blogger.id : -1,
+            (post.blogger) ? post.blogger.name : undefined)
+        );
     return;
 });
 
@@ -85,15 +114,28 @@ postRoute.put("/:id", authorization.check, postValidator, (req: Request, res: Re
         return;
     }
 
-    post = postDAO.update({
+    const p = postDAO.update({
         id: -1,
         title: req.body.title,
         shortDescription: req.body.shortDescription,
         content: req.body.content,
         bloggerId: blogger.id
     });
+    if (!p) {
+        res.status(404).send(invalidExistMessage(id));
+        return;
+    }
 
-    res.status(204).send(post);
+    res.status(204)
+        .send(new PostDTO(
+            p.id,
+            p.title,
+            p.shortDescription,
+            p.content,
+            (p.blogger) ? p.blogger.id : -1,
+            (p.blogger) ? p.blogger.name : undefined)
+        );
+
     return;
 });
 
